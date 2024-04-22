@@ -12,9 +12,13 @@ class NoteController extends Controller
    */
   public function index()
   {
+    // check if the user is authenticated
+    // if (!auth()->check()) {
+    //   return redirect()->route('login');
+    // }
     // $notes = Note::all();
     // $notes = Note::orderBy('created_at', 'desc')->get();
-    $notes = Note::orderBy('created_at', 'desc')->paginate(15);
+    $notes = Note::where('user_id', auth()->id())->orderBy('created_at', 'desc')->paginate(15);
     return view('pages.index', compact('notes'));
   }
 
@@ -31,18 +35,28 @@ class NoteController extends Controller
    */
   public function store(Request $request)
   {
-    // dd($request->all());
+
+    // message error
+    $messages = [
+      'note.required' => 'Champs obligatoire.',
+      'note.string' => 'Le champ de note doit être une chaîne.',
+      'note.max' => 'Le champ de note ne doit pas dépasser 255 caractères.',
+      'note.min' => 'Le champ de note doit comporter au moins 3 caractères.',
+    ];
+
     // validate the data
     $request->validate([
       'note' => ['required', 'string', 'max:255', 'min:3'],
-    ]);
+    ], $messages);
+
+    // dd($request->all());
 
     // $data['user_id'] = auth()->id();
     // store in the database
     $note = Note::create([
       'note' => $request->note,
-      'user_id' => 1,
       // 'user_id' => auth()->id(),
+      'user_id' => auth()->id(),
     ]);
 
     // redirect to the note create
@@ -54,6 +68,11 @@ class NoteController extends Controller
    */
   public function show(Note $note)
   {
+    // check if the note belongs to the authenticated user
+    if ($note->user_id !== auth()->id()) {
+      return redirect()->route('note.index');
+      // or return abort(403);
+    }
     return view('pages.show', compact('note'));
   }
 
@@ -62,6 +81,11 @@ class NoteController extends Controller
    */
   public function edit(Note $note)
   {
+    // check if the note belongs to the authenticated user
+    if ($note->user_id !== auth()->id()) {
+      return redirect()->route('note.index');
+      // or return abort(403);
+    }
     return view('pages.edit', compact('note'));
   }
 
@@ -70,6 +94,11 @@ class NoteController extends Controller
    */
   public function update(Request $request, Note $note)
   {
+    // check if the note belongs to the authenticated user
+    if ($note->user_id !== auth()->id()) {
+      return redirect()->route('note.index');
+      // or return abort(403);
+    }
     $data = $request->validate([
       'note' => ['required', 'string', 'max:255', 'min:3'],
     ]);
@@ -84,6 +113,11 @@ class NoteController extends Controller
    */
   public function destroy(Note $note)
   {
+    // check if the note belongs to the authenticated user
+    if ($note->user_id !== auth()->id()) {
+      return redirect()->route('note.index');
+      // or return abort(403);
+    }
     $note->delete();
     return redirect()->route('note.index')->with('message', 'Note deleted successfully!');
   }

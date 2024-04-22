@@ -12,7 +12,8 @@
 			 name="note"
 			 placeholder="Enter your note here..."
 			 rows="10"
-			></textarea>
+			>{{ old('note') }}</textarea>
+			<x-error-msg name="note" />
 		</div>
 		<div class="mx-auto max-w-lg space-x-5">
 			<a

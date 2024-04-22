@@ -27,6 +27,8 @@
 		@empty
 			<p>No notes yet</p>
 		@endforelse
+	</div>
+	<div class="py-10">
 		{{ $notes->links() }}
 	</div>
 </x-layout>
