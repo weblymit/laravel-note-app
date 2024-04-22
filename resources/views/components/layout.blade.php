@@ -15,13 +15,16 @@
 		http-equiv="X-UA-Compatible"
 	>
 	<title>Document</title>
-
-	@vite('resources/css/app.css')
-	@vite('resources/js/app.js')
+	@vite('resources/css/app.css', 'resources/js/app.js')
 </head>
 
 <body>
-
+	<div class="min-h-screen">
+		{{-- <x-navbar /> --}}
+		<main class="mx-auto max-w-6xl py-10">
+			{{ $slot }}
+		</main>
+	</div>
 </body>
 
 </html>
