@@ -1,3 +1,6 @@
+@php
+	$title = $title ?? 'Notes'; // Default title
+@endphp
 <!DOCTYPE html>
 <html
 	data-theme="emerald"
@@ -21,7 +24,14 @@
 <body>
 	<div class="min-h-screen">
 		{{-- <x-navbar /> --}}
-		<main class="mx-auto max-w-6xl py-10">
+		<main class="mx-auto max-w-6xl py-20">
+			@session('message')
+				<div class="mb-6 rounded-lg bg-green-500 p-4 text-white">
+					{{ session('message') }}
+				</div>
+			@endsession
+
+			<x-header>{{ $title }}</x-header>
 			{{ $slot }}
 		</main>
 	</div>
